@@ -1,11 +1,17 @@
 import React, { Component } from "react";
 import RemoteData from "remote-data-js";
 
-const Layout = ({ children, data, fetch }) => (
-  <div>
-    <h1>Chuck Norris Jokes</h1>
-    {children}
-    <button onClick={fetch}>Fetch a Joke</button>
+const Layout = ({ children, isPending, fetch }) => (
+  <div className="p-8 bg-white shadow rounded">
+    <h1 className="text-green mb-2">Chuck Norris Jokes</h1>
+    <div className="display-block">{children}</div>
+    <button
+      className="rounded bg-green text-white p-2 mt-2 hover:bg-green-dark disabled:bg-grey"
+      disabled={isPending}
+      onClick={fetch}
+    >
+      {isPending ? "Loading..." : "Fetch a Joke"}
+    </button>
   </div>
 );
 const Joke = ({ joke }) => <div>{joke.value}</div>;
@@ -35,8 +41,12 @@ class Home extends Component {
         })
       : null;
     return (
-      <div className="bg-grey w-screen h-screen">
-        {requestContent && <Layout fetch={this.fetch}>{requestContent}</Layout>}
+      <div className="bg-green-lightest w-screen h-screen p-8">
+        {requestContent && (
+          <Layout isPending={data.isPending()} fetch={this.fetch}>
+            {requestContent}
+          </Layout>
+        )}
       </div>
     );
   }
